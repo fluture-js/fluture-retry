@@ -1,0 +1,3 @@
+--bail
+--timeout 20000
+--ui tdd

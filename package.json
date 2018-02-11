@@ -1,0 +1,41 @@
+{
+  "name": "fluture-retry",
+  "version": "0.0.0",
+  "description": "Toolset for retrying potentially failing computations",
+  "main": "index.js",
+  "scripts": {
+    "doctest": "sanctuary-doctest",
+    "lint": "sanctuary-lint",
+    "release": "sanctuary-release",
+    "test": "npm run lint && sanctuary-test && npm run doctest",
+    "test:unit": "sanctuary-test"
+  },
+  "keywords": [
+    "fluture",
+    "retry",
+    "async",
+    "asynchronous",
+    "functional"
+  ],
+  "files": [
+    "/index.js",
+    "/LICENSE",
+    "/package.json",
+    "/README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fluture-js/fluture-retry.git"
+  },
+  "author": "Aldwin Vlasblom <aldwin.vlasblom@gmail.com> (https://github.com/Avaq)",
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {
+    "fluture": ">=6.0.0 <9.0.0"
+  },
+  "devDependencies": {
+    "codecov": "^3.0.0",
+    "fluture": "^8.0.1",
+    "sanctuary-scripts": "^1.0.1"
+  }
+}
