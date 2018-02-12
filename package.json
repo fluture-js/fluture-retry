@@ -1,6 +1,6 @@
 {
   "name": "fluture-retry",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Toolset for retrying potentially failing computations",
   "main": "index.js",
   "scripts": {
