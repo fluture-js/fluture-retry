@@ -60,7 +60,7 @@
 //.
 //. ```js
 //. const Future = require('fluture');
-//. const {retry, exponentially} from 'fluture-retry';
+//. const {retry, exponentially} = require('fluture-retry');
 //.
 //. //    retriedTask :: Future (Array Error) String
 //. const retriedTask = retry(exponentially(64), 32, task);
