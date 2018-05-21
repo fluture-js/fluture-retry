@@ -19,9 +19,10 @@
 //. occasionally:
 //.
 //. ```js
-//. const task = Future((rej, res) => {
-//.   const fail = Math.random() > 0.8;
-//.   setTimeout(fail ? rej : res, 100, fail ? new Error('rej') : 'res');
+//. const Future = require ('fluture');
+//. const task = Future ((rej, res) => {
+//.   const fail = Math.random () > 0.8;
+//.   setTimeout (fail ? rej : res, 100, fail ? new Error ('rej') : 'res');
 //. });
 //. ```
 //.
@@ -38,9 +39,9 @@
 //. increased odds of success.
 //.
 //. ```js
-//. const {retryLinearly} = require('fluture-retry');
-//. const retriedTask = retryLinearly(task);
-//. retriedTask.fork(console.error, console.log);
+//. const {retryLinearly} = require ('fluture-retry');
+//. const retriedTask = retryLinearly (task);
+//. retriedTask.fork (console.error, console.log);
 //. ```
 //.
 //. ### Advanced usage
@@ -59,16 +60,18 @@
 //. end we list all unique error messages.
 //.
 //. ```js
-//. const Future = require('fluture');
-//. const {retry, exponentially} = require('fluture-retry');
+//. const Future = require ('fluture');
+//. const {retry, exponentially} = require ('fluture-retry');
 //.
 //. //    retriedTask :: Future (Array Error) String
-//. const retriedTask = retry(exponentially(64), 32, task);
+//. const retriedTask = retry (exponentially (64), 32, task);
 //.
-//. retriedTask.fork(
-//.   errors => console.error(
+//. retriedTask.fork (
+//.   errors => console.error (
 //.     `All tries failed. The following errors were encountered: \n  ${
-//.       Array.from(new Set(errors.map(({message}) => message))).join('\n  ')
+//.       Array.from (
+//.         new Set (errors.map (({message}) => message))
+//.       ).join ('\n  ')
 //.     }.`
 //.   ),
 //.   console.log
@@ -82,12 +85,12 @@
 
   /* istanbul ignore else */
   if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = f(require('fluture'));
+    module.exports = f (require ('fluture'));
   } else {
-    self.flutureRetry = f(self.Fluture);
+    self.flutureRetry = f (self.Fluture);
   }
 
-}(function(Future) {
+} (function(Future) {
 
   'use strict';
 
@@ -108,15 +111,16 @@
   //.
   //. See [Advanced usage](#advanced-usage) for an example.
   function retry(time, max, task) {
-    var failures = new Array(max);
+    var failures = new Array (max);
     return (function recur(i) {
-      return task.chainRej(function(failure) {
+      return task.chainRej (function(failure) {
         failures[i] = failure;
         var total = i + 1;
-        return total === max ? Future.reject(failures)
-                             : Future.after(time(total), total).chain(recur);
+        return total === max ? Future.reject (failures)
+                             : Future.after (time (total), total)
+                               .chain (recur);
       });
-    }(0));
+    } (0));
   }
 
   //# exponentially :: Number -> Number -> Number
@@ -126,7 +130,7 @@
   //. as a first argument to `retry`.
   function exponentially(t) {
     return function exponentially(n) {
-      return t * Math.pow(n, 2);
+      return t * Math.pow (n, 2);
     };
   }
 
@@ -153,13 +157,14 @@
   //# linearSeconds :: Number -> Number
   //.
   //. Takes a number and multiplies it by 1000.
-  var linearSeconds = linearly(1000);
+  var linearSeconds = linearly (1000);
 
   //# retryLinearly :: Future a b -> Future a b
   //.
   //. A pre-baked retry strategy. See [Basic usage](#basic-usage).
   function retryLinearly(task) {
-    return retry(linearSeconds, 5, task).mapRej(last);
+    return retry (linearSeconds, 5, task)
+           .mapRej (last);
   }
 
   //  default :: Module
