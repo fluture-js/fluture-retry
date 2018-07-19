@@ -4,12 +4,9 @@
   "overrides": [
     {
       "files": ["*.md"],
-      "plugins": ["markdown"],
-      "env": {"es6": true, "node": true},
       "globals": {"Future": false, "task": false},
       "rules": {
-        "no-unused-vars": ["error", {"varsIgnorePattern": "^(Future|task)$"}],
-        "strict": ["off"]
+        "no-unused-vars": ["error", {"varsIgnorePattern": "^(Future|task)$"}]
       }
     }
   ]
