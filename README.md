@@ -19,9 +19,10 @@ Let's say we have the following `Future Error String` that may fail
 occasionally:
 
 ```js
-const task = Future((rej, res) => {
-  const fail = Math.random() > 0.8;
-  setTimeout(fail ? rej : res, 100, fail ? new Error('rej') : 'res');
+const Future = require ('fluture');
+const task = Future ((rej, res) => {
+  const fail = Math.random () > 0.8;
+  setTimeout (fail ? rej : res, 100, fail ? new Error ('rej') : 'res');
 });
 ```
 
@@ -38,9 +39,9 @@ our `task` from before, and we get back a `Future Error String` with
 increased odds of success.
 
 ```js
-const {retryLinearly} = require('fluture-retry');
-const retriedTask = retryLinearly(task);
-retriedTask.fork(console.error, console.log);
+const {retryLinearly} = require ('fluture-retry');
+const retriedTask = retryLinearly (task);
+retriedTask.fork (console.error, console.log);
 ```
 
 ### Advanced usage
@@ -59,16 +60,18 @@ about two and a half minutes, waiting just over a minute at most. At the
 end we list all unique error messages.
 
 ```js
-const Future = require('fluture');
-const {retry, exponentially} from 'fluture-retry';
+const Future = require ('fluture');
+const {retry, exponentially} = require ('fluture-retry');
 
 //    retriedTask :: Future (Array Error) String
-const retriedTask = retry(exponentially(64), 32, task);
+const retriedTask = retry (exponentially (64), 32, task);
 
-retriedTask.fork(
-  errors => console.error(
+retriedTask.fork (
+  errors => console.error (
     `All tries failed. The following errors were encountered: \n  ${
-      Array.from(new Set(errors.map(({message}) => message))).join('\n  ')
+      Array.from (
+        new Set (errors.map (({message}) => message))
+      ).join ('\n  ')
     }.`
   ),
   console.log
@@ -77,7 +80,7 @@ retriedTask.fork(
 
 ## API
 
-<h4 name="retry"><code><a href="https://github.com/fluture-js/fluture-retry/blob/v1.0.0/index.js#L99">retry :: (Number -⁠> Number, Number, Future a b) -⁠> Future (Array a) b</a></code></h4>
+#### <a name="retry" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.1/index.js#L102">`retry :: (Number -⁠> Number, Number, Future a b) -⁠> Future (Array a) b`</a>
 
 Create a retrying Future using the given parameters:
 
@@ -89,27 +92,27 @@ Create a retrying Future using the given parameters:
 
 See [Advanced usage](#advanced-usage) for an example.
 
-<h4 name="exponentially"><code><a href="https://github.com/fluture-js/fluture-retry/blob/v1.0.0/index.js#L122">exponentially :: Number -⁠> Number -⁠> Number</a></code></h4>
+#### <a name="exponentially" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.1/index.js#L126">`exponentially :: Number -⁠> Number -⁠> Number`</a>
 
 Takes two numbers and returns the result of multiplying the first by
 the second raised to the power of two. To be partially applied and used
 as a first argument to `retry`.
 
-<h4 name="linearly"><code><a href="https://github.com/fluture-js/fluture-retry/blob/v1.0.0/index.js#L133">linearly :: Number -⁠> Number -⁠> Number</a></code></h4>
+#### <a name="linearly" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.1/index.js#L137">`linearly :: Number -⁠> Number -⁠> Number`</a>
 
 Takes two numbers and returns the result of multiplying them. To be
 partially applied and used as a first argument to `retry`.
 
-<h4 name="statically"><code><a href="https://github.com/fluture-js/fluture-retry/blob/v1.0.0/index.js#L143">statically :: a -⁠> b -⁠> a</a></code></h4>
+#### <a name="statically" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.1/index.js#L147">`statically :: a -⁠> b -⁠> a`</a>
 
 Takes two values and returns the first. To be partially applied and used
 as a first argument to `retry`.
 
-<h4 name="linearSeconds"><code><a href="https://github.com/fluture-js/fluture-retry/blob/v1.0.0/index.js#L153">linearSeconds :: Number -⁠> Number</a></code></h4>
+#### <a name="linearSeconds" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.1/index.js#L157">`linearSeconds :: Number -⁠> Number`</a>
 
 Takes a number and multiplies it by 1000.
 
-<h4 name="retryLinearly"><code><a href="https://github.com/fluture-js/fluture-retry/blob/v1.0.0/index.js#L158">retryLinearly :: Future a b -⁠> Future a b</a></code></h4>
+#### <a name="retryLinearly" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.1/index.js#L162">`retryLinearly :: Future a b -⁠> Future a b`</a>
 
 A pre-baked retry strategy. See [Basic usage](#basic-usage).
 
