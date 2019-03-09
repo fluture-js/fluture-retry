@@ -36,6 +36,6 @@
   "devDependencies": {
     "codecov": "^3.0.0",
     "fluture": "^10.0.0",
-    "sanctuary-scripts": "^2.0.0"
+    "sanctuary-scripts": "^3.0.0"
   }
 }
