@@ -85,17 +85,21 @@ test ('linearSeconds', function() {
 
 test ('retry', function() {
   eq (typeof fr.retry, 'function');
-  eq (fr.retry.length, 3);
-  eq (Future.isFuture (fr.retry (fr.statically (1), 1, resolved)), true);
+  eq (fr.retry.length, 1);
+  eq (typeof fr.retry (), 'function');
+  eq (fr.retry ().length, 1);
+  eq (typeof fr.retry () (), 'function');
+  eq (fr.retry () ().length, 1);
+  eq (Future.isFuture (fr.retry (fr.statically (1)) (1) (resolved)), true);
 });
 
 test ('retry success', function(done) {
-  var actual = fr.retry (fr.statically (1), 1, resolved);
+  var actual = fr.retry (fr.statically (1)) (1) (resolved);
   feq (done, actual, resolved);
 });
 
 test ('retry failure', function(done) {
-  var actual = fr.retry (fr.statically (1), 1, rejected);
+  var actual = fr.retry (fr.statically (1)) (1) (rejected);
   feq (done, actual, Future.reject (['rejected']));
 });
 

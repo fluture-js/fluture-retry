@@ -64,7 +64,7 @@
 //. const {retry, exponentially} = require ('fluture-retry');
 //.
 //. //    retriedTask :: Future (Array Error) String
-//. const retriedTask = retry (exponentially (64), 32, task);
+//. const retriedTask = retry (exponentially (64)) (32) (task);
 //.
 //. retriedTask.fork (
 //.   errors => console.error (
@@ -99,7 +99,7 @@
     return xs[xs.length - 1];
   }
 
-  //# retry :: (Number -> Number, Number, Future a b) -> Future (Array a) b
+  //# retry :: (Number -> Number) -> Number -> Future a b -> Future (Array a) b
   //.
   //. Create a retrying Future using the given parameters:
   //.
@@ -110,17 +110,21 @@
   //. 1. A Future representing the computation to retry.
   //.
   //. See [Advanced usage](#advanced-usage) for an example.
-  function retry(time, max, task) {
-    var failures = new Array (max);
-    return (function recur(i) {
-      return task.chainRej (function(failure) {
-        failures[i] = failure;
-        var total = i + 1;
-        return total === max ? Future.reject (failures)
-                             : Future.after (time (total), total)
-                               .chain (recur);
-      });
-    } (0));
+  function retry(time) {
+    return function retry(max) {
+      return function retry(task) {
+        var failures = new Array (max);
+        return (function recur(i) {
+          return task.chainRej (function(failure) {
+            failures[i] = failure;
+            var total = i + 1;
+            return total === max ? Future.reject (failures)
+                                 : Future.after (time (total), total)
+                                   .chain (recur);
+          });
+        } (0));
+      };
+    };
   }
 
   //# exponentially :: Number -> Number -> Number
@@ -163,8 +167,7 @@
   //.
   //. A pre-baked retry strategy. See [Basic usage](#basic-usage).
   function retryLinearly(task) {
-    return retry (linearSeconds, 5, task)
-           .mapRej (last);
+    return Future.mapRej (last) (retry (linearSeconds) (5) (task));
   }
 
   //  default :: Module
