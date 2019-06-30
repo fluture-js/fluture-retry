@@ -64,7 +64,7 @@ const Future = require ('fluture');
 const {retry, exponentially} = require ('fluture-retry');
 
 //    retriedTask :: Future (Array Error) String
-const retriedTask = retry (exponentially (64), 32, task);
+const retriedTask = retry (exponentially (64)) (32) (task);
 
 retriedTask.fork (
   errors => console.error (
@@ -80,7 +80,7 @@ retriedTask.fork (
 
 ## API
 
-#### <a name="retry" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.3/index.js#L102">`retry :: (Number -⁠> Number, Number, Future a b) -⁠> Future (Array a) b`</a>
+#### <a name="retry" href="https://github.com/fluture-js/fluture-retry/blob/v2.0.0/index.js#L102">`retry :: (Number -⁠> Number) -⁠> Number -⁠> Future a b -⁠> Future (Array a) b`</a>
 
 Create a retrying Future using the given parameters:
 
@@ -92,27 +92,27 @@ Create a retrying Future using the given parameters:
 
 See [Advanced usage](#advanced-usage) for an example.
 
-#### <a name="exponentially" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.3/index.js#L126">`exponentially :: Number -⁠> Number -⁠> Number`</a>
+#### <a name="exponentially" href="https://github.com/fluture-js/fluture-retry/blob/v2.0.0/index.js#L130">`exponentially :: Number -⁠> Number -⁠> Number`</a>
 
 Takes two numbers and returns the result of multiplying the first by
 the second raised to the power of two. To be partially applied and used
 as a first argument to `retry`.
 
-#### <a name="linearly" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.3/index.js#L137">`linearly :: Number -⁠> Number -⁠> Number`</a>
+#### <a name="linearly" href="https://github.com/fluture-js/fluture-retry/blob/v2.0.0/index.js#L141">`linearly :: Number -⁠> Number -⁠> Number`</a>
 
 Takes two numbers and returns the result of multiplying them. To be
 partially applied and used as a first argument to `retry`.
 
-#### <a name="statically" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.3/index.js#L147">`statically :: a -⁠> b -⁠> a`</a>
+#### <a name="statically" href="https://github.com/fluture-js/fluture-retry/blob/v2.0.0/index.js#L151">`statically :: a -⁠> b -⁠> a`</a>
 
 Takes two values and returns the first. To be partially applied and used
 as a first argument to `retry`.
 
-#### <a name="linearSeconds" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.3/index.js#L157">`linearSeconds :: Number -⁠> Number`</a>
+#### <a name="linearSeconds" href="https://github.com/fluture-js/fluture-retry/blob/v2.0.0/index.js#L161">`linearSeconds :: Number -⁠> Number`</a>
 
 Takes a number and multiplies it by 1000.
 
-#### <a name="retryLinearly" href="https://github.com/fluture-js/fluture-retry/blob/v1.0.3/index.js#L162">`retryLinearly :: Future a b -⁠> Future a b`</a>
+#### <a name="retryLinearly" href="https://github.com/fluture-js/fluture-retry/blob/v2.0.0/index.js#L166">`retryLinearly :: Future a b -⁠> Future a b`</a>
 
 A pre-baked retry strategy. See [Basic usage](#basic-usage).
 
