@@ -1,11 +1,13 @@
 {
   "root": true,
   "extends": ["./node_modules/sanctuary-style/eslint-es3.json"],
+  "parserOptions": {"sourceType": "module"},
+  "env": {"node": true, "es6": true},
   "overrides": [
     {
-      "files": ["*.md"],
-      "globals": {"Future": false, "task": false},
+      "files": ["README.md"],
       "rules": {
+        "no-undef": ["off"],
         "no-unused-vars": ["error", {"varsIgnorePattern": "^(Future|task)$"}]
       }
     }

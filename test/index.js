@@ -1,37 +1,17 @@
-'use strict';
+import assert from 'assert';
+import {resolve, reject, isFuture} from 'fluture/index.js';
+import {equivalence} from 'fluture/test/assertions.js';
+import Z from 'sanctuary-type-classes';
+import * as fr from '../index.js';
+import test from 'oletus';
 
-var assert = require ('assert');
-var Future = require ('fluture');
-var Z = require ('sanctuary-type-classes');
-
-var fr = require ('..');
-
-
-var resolved = Future.of ('resolved');
-var rejected = Future.reject ('rejected');
+var resolved = resolve ('resolved');
+var rejected = reject ('rejected');
 
 function eq(actual, expected) {
   assert.strictEqual (arguments.length, eq.length);
   assert.strictEqual (Z.toString (actual), Z.toString (expected));
   assert.strictEqual (Z.equals (actual, expected), true);
-}
-
-function feq(ok, actual, expected) {
-  expected.fork (function(a) {
-    actual.fork (function(b) {
-      eq (a, b);
-      ok ();
-    }, function(b) {
-      eq ('resolved<' + Z.toString (a) + '>', 'rejected<' + Z.toString (b) + '>');
-    });
-  }, function(a) {
-    actual.fork (function(b) {
-      eq ('rejected<' + Z.toString (a) + '>', 'resolved<' + Z.toString (b) + '>');
-    }, function(b) {
-      eq (a, b);
-      ok ();
-    });
-  });
 }
 
 test ('exponentially', function() {
@@ -90,29 +70,29 @@ test ('retry', function() {
   eq (fr.retry ().length, 1);
   eq (typeof fr.retry () (), 'function');
   eq (fr.retry () ().length, 1);
-  eq (Future.isFuture (fr.retry (fr.statically (1)) (1) (resolved)), true);
+  eq (isFuture (fr.retry (fr.statically (1)) (1) (resolved)), true);
 });
 
-test ('retry success', function(done) {
+test ('retry success', function() {
   var actual = fr.retry (fr.statically (1)) (1) (resolved);
-  feq (done, actual, resolved);
+  return equivalence (actual) (resolved);
 });
 
-test ('retry failure', function(done) {
+test ('retry failure', function() {
   var actual = fr.retry (fr.statically (1)) (1) (rejected);
-  feq (done, actual, Future.reject (['rejected']));
+  return equivalence (actual) (reject (['rejected']));
 });
 
 test ('retryLinearly', function() {
   eq (typeof fr.retryLinearly, 'function');
   eq (fr.retryLinearly.length, 1);
-  eq (Future.isFuture (fr.retryLinearly (resolved)), true);
+  eq (isFuture (fr.retryLinearly (resolved)), true);
 });
 
-test ('retryLinearly success', function(done) {
-  feq (done, fr.retryLinearly (resolved), resolved);
+test ('retryLinearly success', function() {
+  return equivalence (fr.retryLinearly (resolved)) (resolved);
 });
 
-test ('retryLinearly failure', function(done) {
-  feq (done, fr.retryLinearly (rejected), rejected);
+test ('retryLinearly failure', function() {
+  return equivalence (fr.retryLinearly (rejected)) (rejected);
 });
