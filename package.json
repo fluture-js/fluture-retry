@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Toolset for retrying potentially failing computations",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "doctest": "sanctuary-doctest",
     "lint": "sanctuary-lint",
@@ -19,6 +20,7 @@
   ],
   "files": [
     "/index.js",
+    "/index.d.ts",
     "/LICENSE",
     "/package.json",
     "/README.md"
