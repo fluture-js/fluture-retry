@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.cjs",
   "module": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "codecov": "codecov",
@@ -23,6 +24,7 @@
   "files": [
     "/index.cjs",
     "/index.js",
+    "/index.d.ts",
     "/LICENSE",
     "/package.json",
     "/README.md"
