@@ -3,7 +3,6 @@
 //. [![NPM Version](https://badge.fury.io/js/fluture-retry.svg)](https://www.npmjs.com/package/fluture-retry)
 //. [![Dependencies](https://david-dm.org/fluture-js/fluture-retry.svg)](https://david-dm.org/fluture-js/fluture-retry)
 //. [![Build Status](https://travis-ci.org/fluture-js/fluture-retry.svg?branch=master)](https://travis-ci.org/fluture-js/fluture-retry)
-//. [![Code Coverage](https://codecov.io/gh/fluture-js/fluture-retry/branch/master/graph/badge.svg)](https://codecov.io/gh/fluture-js/fluture-retry)
 //. [![Greenkeeper badge](https://badges.greenkeeper.io/fluture-js/fluture-retry.svg)](https://greenkeeper.io/)
 //.
 //. Toolset for retrying potentially failing computations represented by
