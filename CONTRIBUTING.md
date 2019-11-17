@@ -1,24 +1,18 @@
-# Contributing
+# Contribution Guideline
 
-1.  Update local master branch:
+## Making a contribution
 
-        $ git checkout master
-        $ git pull upstream master
+1. Fork the repo if you do not have write access
+1. Clone the remote (fork) from GitHub
+1. Create a branch named `<yourgithubusername>/<yourfeature>`
+1. Make one or more atomic commits
+1. Make sure the tests pass locally
+1. Create a pull request on GitHub
 
-2.  Create feature branch:
+## Publishing a new version
 
-        $ git checkout -b feature-x
-
-3.  Make one or more atomic commits, and ensure that each commit has a
-    descriptive commit message. Commit messages should be line wrapped
-    at 72 characters.
-
-4.  Run `npm test`, and address any errors. Preferably, fix commits in place
-    using `git rebase` or `git commit --amend` to make the changes easier to
-    review.
-
-5.  Push:
-
-        $ git push origin feature-x
-
-6.  Open a pull request.
+1. Make sure you have write access to the module on npm
+1. Make sure you have write access to the master branch on GitHub
+1. Checkout `master` and make sure it's up to date with the remote
+1. Run `npm run release <level>`, where `<level>` can be any of: 'major',
+   'minor', 'patch', 'premajor', 'preminor', 'prepatch', or 'prerelease'.

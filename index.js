@@ -77,109 +77,84 @@
 //.   console.log
 //. );
 //. ```
-//.
+
+import {reject, after, mapRej, chain, chainRej} from 'fluture/index.js';
+
+//  last :: NonEmpty (Array a) -> a
+function last(xs) {
+  return xs[xs.length - 1];
+}
+
 //. ## API
-(function(f) {
-
-  'use strict';
-
-  /* istanbul ignore else */
-  if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = f (require ('fluture'));
-  } else {
-    self.flutureRetry = f (self.Fluture);
-  }
-
-} (function(Future) {
-
-  'use strict';
-
-  //  last :: NonEmpty (Array a) -> a
-  function last(xs) {
-    return xs[xs.length - 1];
-  }
-
-  //# retry :: (Number -> Number) -> Number -> Future a b -> Future (Array a) b
-  //.
-  //. Create a retrying Future using the given parameters:
-  //.
-  //. 1. A function over the amount of failures to determine waiting time.
-  //.    See [`exponentially`](#exponentially), [`linearly`](#linearly) and
-  //.    [`statically`](#statically) for pre-baked functions of this sort.
-  //. 1. The maximum number of retries before failing.
-  //. 1. A Future representing the computation to retry.
-  //.
-  //. See [Advanced usage](#advanced-usage) for an example.
-  function retry(time) {
-    return function retry(max) {
-      return function retry(task) {
-        var failures = new Array (max);
-        return (function recur(i) {
-          return task.chainRej (function(failure) {
-            failures[i] = failure;
-            var total = i + 1;
-            return total === max ? Future.reject (failures)
-                                 : Future.after (time (total), total)
-                                   .chain (recur);
-          });
-        } (0));
-      };
+//.
+//# retry :: (Number -> Number) -> Number -> Future a b -> Future (Array a) b
+//.
+//. Create a retrying Future using the given parameters:
+//.
+//. 1. A function over the amount of failures to determine waiting time.
+//.    See [`exponentially`](#exponentially), [`linearly`](#linearly) and
+//.    [`statically`](#statically) for pre-baked functions of this sort.
+//. 1. The maximum number of retries before failing.
+//. 1. A Future representing the computation to retry.
+//.
+//. See [Advanced usage](#advanced-usage) for an example.
+export function retry(time) {
+  return function retry(max) {
+    return function retry(task) {
+      var failures = new Array (max);
+      return (function recur(i) {
+        return task.pipe (chainRej (function(failure) {
+          failures[i] = failure;
+          var total = i + 1;
+          return total === max ? reject (failures)
+                               : chain (recur) (after (time (total)) (total));
+        }));
+      } (0));
     };
-  }
-
-  //# exponentially :: Number -> Number -> Number
-  //.
-  //. Takes two numbers and returns the result of multiplying the first by
-  //. the second raised to the power of two. To be partially applied and used
-  //. as a first argument to `retry`.
-  function exponentially(t) {
-    return function exponentially(n) {
-      return t * Math.pow (n, 2);
-    };
-  }
-
-  //# linearly :: Number -> Number -> Number
-  //.
-  //. Takes two numbers and returns the result of multiplying them. To be
-  //. partially applied and used as a first argument to `retry`.
-  function linearly(t) {
-    return function linearly(n) {
-      return t * n;
-    };
-  }
-
-  //# statically :: a -> b -> a
-  //.
-  //. Takes two values and returns the first. To be partially applied and used
-  //. as a first argument to `retry`.
-  function statically(t) {
-    return function statically(_) {
-      return t;
-    };
-  }
-
-  //# linearSeconds :: Number -> Number
-  //.
-  //. Takes a number and multiplies it by 1000.
-  var linearSeconds = linearly (1000);
-
-  //# retryLinearly :: Future a b -> Future a b
-  //.
-  //. A pre-baked retry strategy. See [Basic usage](#basic-usage).
-  function retryLinearly(task) {
-    return Future.mapRej (last) (retry (linearSeconds) (5) (task));
-  }
-
-  //  default :: Module
-  return {
-    retry: retry,
-    retryLinearly: retryLinearly,
-    exponentially: exponentially,
-    linearly: linearly,
-    statically: statically,
-    linearSeconds: linearSeconds
   };
+}
 
-}));
+//# exponentially :: Number -> Number -> Number
+//.
+//. Takes two numbers and returns the result of multiplying the first by
+//. the second raised to the power of two. To be partially applied and used
+//. as a first argument to `retry`.
+export function exponentially(t) {
+  return function exponentially(n) {
+    return t * Math.pow (n, 2);
+  };
+}
+
+//# linearly :: Number -> Number -> Number
+//.
+//. Takes two numbers and returns the result of multiplying them. To be
+//. partially applied and used as a first argument to `retry`.
+export function linearly(t) {
+  return function linearly(n) {
+    return t * n;
+  };
+}
+
+//# statically :: a -> b -> a
+//.
+//. Takes two values and returns the first. To be partially applied and used
+//. as a first argument to `retry`.
+export function statically(t) {
+  return function statically(_) {
+    return t;
+  };
+}
+
+//# linearSeconds :: Number -> Number
+//.
+//. Takes a number and multiplies it by 1000.
+export var linearSeconds = linearly (1000);
+
+//# retryLinearly :: Future a b -> Future a b
+//.
+//. A pre-baked retry strategy. See [Basic usage](#basic-usage).
+export function retryLinearly(task) {
+  return mapRej (last) (retry (linearSeconds) (5) (task));
+}
 
 //. [Fluture]: https://github.com/fluture-js/Fluture
