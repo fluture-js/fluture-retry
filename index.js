@@ -1,24 +1,43 @@
 //. # Fluture retry
 //.
-//. [![NPM Version](https://badge.fury.io/js/fluture-retry.svg)](https://www.npmjs.com/package/fluture-retry)
-//. [![Dependencies](https://david-dm.org/fluture-js/fluture-retry.svg)](https://david-dm.org/fluture-js/fluture-retry)
-//. [![Build Status](https://travis-ci.org/fluture-js/fluture-retry.svg?branch=master)](https://travis-ci.org/fluture-js/fluture-retry)
-//. [![Greenkeeper badge](https://badges.greenkeeper.io/fluture-js/fluture-retry.svg)](https://greenkeeper.io/)
-//.
 //. Toolset for retrying potentially failing computations represented by
 //. [Fluture][] Futures.
+//.
+//. ## Usage
+//.
+//. ### Node
 //.
 //. ```console
 //. $ npm install --save fluture fluture-retry
 //. ```
 //.
-//. ## Usage
+//. On Node 12 and up, this module can be loaded directly with `import` or
+//. `require`. On Node versions below 12, `require` or the [esm][]-loader can
+//. be used.
+//.
+//. ### Deno and Modern Browsers
+//.
+//. You can load the EcmaScript module from various content delivery networks:
+//.
+//. - [Skypack](https://cdn.skypack.dev/fluture-retry@3.0.0)
+//. - [JSPM](https://jspm.dev/fluture-retry@3.0.0)
+//. - [jsDelivr](https://cdn.jsdelivr.net/npm/fluture-retry@3.0.0/+esm)
+//.
+//. ### Old Browsers and Code Pens
+//.
+//. There's a [UMD][] file included in the NPM package, also available via
+//. jsDelivr: https://cdn.jsdelivr.net/npm/fluture-retry@3.0.0/dist/umd.js
+//.
+//. This file adds `flutureRetry` to the global scope, or use CommonJS/AMD
+//. when available.
+//.
+//. ### Usage Example
 //.
 //. Let's say we have the following `Future Error String` that may fail
 //. occasionally:
 //.
 //. ```js
-//. const Future = require ('fluture');
+//. import {Future} from 'fluture';
 //. const task = Future ((rej, res) => {
 //.   const fail = Math.random () > 0.8;
 //.   setTimeout (fail ? rej : res, 100, fail ? new Error ('rej') : 'res');
@@ -28,7 +47,7 @@
 //. We might simply want to try again when it does fail, a certain amount of
 //. times, waiting a certain length of time in between tries.
 //.
-//. ### Basic usage
+//. #### Basic usage
 //.
 //. The `retryLinearly` export will take a Future and produce a Future which
 //. retries the computation five times, at linearly increasing intervals
@@ -38,12 +57,13 @@
 //. increased odds of success.
 //.
 //. ```js
-//. const {retryLinearly} = require ('fluture-retry');
+//. import {fork} from 'fluture';
+//. import {retryLinearly} from 'fluture-retry';
 //. const retriedTask = retryLinearly (task);
-//. retriedTask.fork (console.error, console.log);
+//. fork (retriedTask) (console.error) (console.log);
 //. ```
 //.
-//. ### Advanced usage
+//. #### Advanced usage
 //.
 //. The pre-baked retry strategies may not include exactly what you need. The
 //. `retry` function puts you in control of the following:
@@ -59,22 +79,21 @@
 //. end we list all unique error messages.
 //.
 //. ```js
-//. const Future = require ('fluture');
-//. const {retry, exponentially} = require ('fluture-retry');
+//. import {fork} from 'fluture';
+//. import {retry, exponentially} from 'fluture-retry';
 //.
 //. //    retriedTask :: Future (Array Error) String
 //. const retriedTask = retry (exponentially (64)) (32) (task);
 //.
-//. retriedTask.fork (
+//. fork (retriedTask) (
 //.   errors => console.error (
 //.     `All tries failed. The following errors were encountered: \n  ${
 //.       Array.from (
 //.         new Set (errors.map (({message}) => message))
 //.       ).join ('\n  ')
 //.     }.`
-//.   ),
-//.   console.log
-//. );
+//.   )
+//. ) (console.log);
 //. ```
 
 import {reject, after, mapRej, chain, chainRej} from 'fluture/index.js';
@@ -157,3 +176,5 @@ export function retryLinearly(task) {
 }
 
 //. [Fluture]: https://github.com/fluture-js/Fluture
+//. [esm]: https://github.com/standard-things/esm
+//. [UMD]: https://github.com/umdjs/umd
